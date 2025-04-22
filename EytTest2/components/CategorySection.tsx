@@ -1,4 +1,6 @@
 import { FetchMovies } from "@/connection-functions/fetchMovies";
+import { videoType } from "@/constants/Types";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -15,16 +17,19 @@ type Props = {
   title: string;
   fetchUrl: string;
   refreshTrigger?: number;
+  type: videoType;
 };
 
 export default function CategorySection({
   title,
   fetchUrl,
   refreshTrigger,
+  type,
 }: Props) {
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const loadData = async () => {
     if (loading) return;
@@ -48,6 +53,8 @@ export default function CategorySection({
   };
 
   useEffect(() => {
+    setData([]);
+    setPage(1);
     loadData();
   }, [refreshTrigger]);
 
@@ -59,7 +66,10 @@ export default function CategorySection({
         data={data}
         keyExtractor={(item, index) => `${item.id}-${index}`}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => router.push(`/details?id=${item.id}&type=${type}`)}
+          >
             <Image
               source={{
                 uri: `https://image.tmdb.org/t/p/w300${item.poster_path}`,

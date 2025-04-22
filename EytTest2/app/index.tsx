@@ -20,7 +20,7 @@ export default function HomeScreen() {
         <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
-          progressViewOffset={50}
+          progressViewOffset={70}
         />
       }
       style={styles.container}
@@ -32,41 +32,49 @@ export default function HomeScreen() {
         title="Popüler Filmler"
         fetchUrl="/movie/popular"
         refreshTrigger={refreshTrigger}
+        type="movie"
       />
       <CategorySection
         title="En Yüksek Puanlı Filmler"
         fetchUrl="/movie/top_rated"
         refreshTrigger={refreshTrigger}
+        type="movie"
       />
       <CategorySection
         title="Aksiyon Filmleri"
         fetchUrl="/discover/movie?with_genres=28"
         refreshTrigger={refreshTrigger}
+        type="movie"
       />
       <CategorySection
         title="Komedi Filmleri"
         fetchUrl="/discover/movie?with_genres=35"
         refreshTrigger={refreshTrigger}
+        type="movie"
       />
       <CategorySection
         title="Popüler Diziler"
         fetchUrl="/tv/popular"
         refreshTrigger={refreshTrigger}
+        type="show"
       />
       <CategorySection
         title="En Yüksek Puanlı Diziler"
         fetchUrl="/tv/top_rated"
         refreshTrigger={refreshTrigger}
+        type="show"
       />
       <CategorySection
         title="Komedi Dizileri"
         fetchUrl="/discover/tv?with_genres=35"
         refreshTrigger={refreshTrigger}
+        type="show"
       />
       <CategorySection
         title="Bilim Kurgu Dizileri"
         fetchUrl="/discover/tv?with_genres=10765"
         refreshTrigger={refreshTrigger}
+        type="show"
       />
     </ScrollView>
   );
