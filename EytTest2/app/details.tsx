@@ -1,4 +1,7 @@
+import Header from "@/components/Header";
 import { FetchDetails } from "@/connection-functions/fetchDetails";
+import { formatDateLong } from "@/utils/FormatDate";
+import { getDurationInfo } from "@/utils/FormatDurationInfo";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -44,6 +47,7 @@ export default function DetailsScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      <Header />
       {imagePath ? (
         <Image
           source={{ uri: `https://image.tmdb.org/t/p/w780${imagePath}` }}
@@ -56,11 +60,37 @@ export default function DetailsScreen() {
       )}
 
       <View style={styles.content}>
-        <Text style={styles.title}>{details.title || details.name}</Text>
-        <Text style={styles.subtitle}>Puan: {details.vote_average}/10</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.title} numberOfLines={2}>
+            {details.title || details.name}
+          </Text>
+          <Text style={styles.duration}>
+            {getDurationInfo(type as "movie" | "tv", details)}
+          </Text>
+        </View>
+
+        {details.tagline != "" && (
+          <Text style={[{ fontWeight: "bold" }, styles.subtitle]}>
+            🧵"{details.tagline}"
+          </Text>
+        )}
+        <Text style={styles.subtitle}>🌟 {details.vote_average}/10</Text>
         <Text style={styles.overview}>
           {details.overview || "Açıklama bulunamadı."}
         </Text>
+        <Text style={styles.releaseDate}>
+          {formatDateLong(details.release_date || details.first_air_date)}
+        </Text>
+        <Text style={styles.releaseDate}>
+          🎬 {details.production_companies[0].name}
+        </Text>
+        <View style={styles.genreRow}>
+          {details.genres?.map((genre: { id: number; name: string }) => (
+            <Text key={genre.id} style={styles.genre}>
+              {genre.name}
+            </Text>
+          ))}
+        </View>
       </View>
     </ScrollView>
   );
@@ -78,12 +108,26 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
   },
+  titleRow: {
+    flexDirection: "row",
+    marginBottom: 8,
+  },
+
   title: {
+    flexBasis: "60%",
     fontSize: 24,
     fontWeight: "bold",
     color: "#fff",
-    marginBottom: 8,
   },
+
+  duration: {
+    flexBasis: "40%",
+    fontSize: 14,
+    textAlign: "right",
+    color: "#ccc",
+    paddingTop: 6,
+  },
+
   subtitle: {
     fontSize: 16,
     color: "#ccc",
@@ -109,5 +153,27 @@ const styles = StyleSheet.create({
     marginTop: 30,
     fontSize: 16,
     height: "100%",
+  },
+  releaseDate: {
+    color: "#ddd",
+    fontSize: 15,
+    lineHeight: 22,
+    paddingTop: 20,
+  },
+  genreRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginBottom: 12,
+    paddingTop: 20,
+  },
+
+  genre: {
+    backgroundColor: "#222",
+    color: "#fff",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 20,
+    fontSize: 12,
   },
 });
